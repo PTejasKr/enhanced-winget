@@ -77,7 +77,6 @@ function App() {
         </div>
       </header>
 
-      {/* Features Section */}
       <section className="hw-features">
         <div className="hw-features-grid">
           

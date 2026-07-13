@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import heroArt from './assets/hero-art.jpg';
+import featureTracking from './assets/feature_tracking.jpg';
+import featurePerformance from './assets/feature_performance.jpg';
+import featureFrameworks from './assets/feature_frameworks.jpg';
 
 function App() {
   const [copied, setCopied] = useState(false);
@@ -30,7 +34,7 @@ function App() {
 
       <header className="hw-vignette">
         <img 
-          src="/hero-art.jpg" 
+          src={heroArt} 
           alt="" 
           aria-hidden="true" 
           className="hw-hero-art" 
@@ -83,7 +87,7 @@ function App() {
               <h2>Silent Tracking</h2>
             </div>
             <div className="hw-feature-image">
-               <img src="/feature_tracking.jpg" alt="Autonomous tracking" />
+               <img src={featureTracking} alt="Autonomous tracking" />
             </div>
             <p className="hw-feature-text">
               The daemon tracks package updates in the background. No annoying popups, no manual intervention required. Once installed, it learns and updates automatically.
@@ -96,7 +100,7 @@ function App() {
               <h2>Rust Core</h2>
             </div>
             <div className="hw-feature-image">
-               <img src="/feature_performance.jpg" alt="Rust core" />
+               <img src={featurePerformance} alt="Rust core" />
             </div>
             <p className="hw-feature-text">
               Built on a lightning-fast Rust backend. The local system service runs with minimal memory footprint, utilizing Windows WMI to intelligently schedule updates.
@@ -109,7 +113,7 @@ function App() {
               <h2>All Frameworks</h2>
             </div>
             <div className="hw-feature-image">
-               <img src="/feature_frameworks.jpg" alt="All frameworks" />
+               <img src={featureFrameworks} alt="All frameworks" />
             </div>
             <p className="hw-feature-text">
               Supports everything. From Winget packages, Scoop binaries, Chocolatey installations, to Python and Rust tooling. Your entire toolchain stays perfectly synced.

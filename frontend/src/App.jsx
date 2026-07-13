@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 function App() {
   const [copied, setCopied] = useState(false);
-  const installCommand = 'powershell -Command "Set-ExecutionPolicy Bypass -Scope Process -Force; .\\setup-all.ps1"';
+  const installCommand = 'powershell -Command "Set-ExecutionPolicy Bypass -Scope Process -Force; Invoke-WebRequest -Uri https://raw.githubusercontent.com/PTejasKr/enhanced-winget/master/setup-all.ps1 -OutFile setup-all.ps1; .\\setup-all.ps1"';
 
   const handleCopy = () => {
     navigator.clipboard.writeText(installCommand);

@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+websockets
+redis
+praw
+feedparser

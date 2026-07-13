@@ -1,0 +1,131 @@
+PRODUCT REQUIREMENTS DOCUMENT (PRD)
+Project: GhostUpdate (AI-Driven Zero-Touch Terminal Installer)
+Version: 1.0.0
+Target Platform: Windows 10/11
+Primary Languages: Rust (Local Client), Python/Go (Cloud Backend)
+
+================================================================================
+1. EXECUTIVE SUMMARY
+================================================================================
+GhostUpdate is an enterprise-grade, consumer-facing package manager wrapper that 
+automates application updates via Winget, Scoop, and Chocolatey. Unlike standard auto-updaters, it 
+leverages a decoupled AI Cloud Brain to analyze tech journalism, GitHub releases, 
+and community sentiment (Reddit/Forums) to determine the highest-scored update candidate 
+across all available package repositories. The local daemon operates entirely in the background (Ghost Mode), 
+consuming < 20MB RAM, and utilizes native Windows OS hooks for zero-touch silent 
+deployments when the system is idle.
+
+================================================================================
+2. SYSTEM ARCHITECTURE
+================================================================================
+The system is strictly divided into two highly scalable components:
+
+A. The Local Daemon (Thin Client)
+- Memory Footprint: ~10-15MB RAM.
+- Language: Rust.
+- Execution Context: Runs as a Windows Service under `LocalSystem` to bypass UAC.
+- Responsibilities: Network detection, OS idle detection, process monitoring, 
+  fetching JSON payloads via WebSocket/SSE, emitting telemetry on update success/failure, 
+  native Toast notifications, and orchestrating updates via a modular Package Manager Interface 
+  (Winget, Scoop, Chocolatey).
+
+B. The Cloud Brain (Thick API)
+- Infrastructure: Serverless / Dockerized WebSocket/SSE Gateway with Edge CDN Caching.
+- Responsibilities: Aggregating API feeds (News, RSS, Reddit), running LLM 
+  inference for stability and scoring heuristics across package repositories, and pushing 
+  real-time update events down to connected clients.
+
+================================================================================
+3. CORE WORKFLOWS & DECISION LOGIC
+================================================================================
+The local daemon queries available updates across Winget, Scoop, and Chocolatey, 
+sending the list to the Cloud Brain. The Cloud Brain applies the AI scoring system 
+to select the "best" repository source and version. The daemon then routes the 
+selected update through the Zero-Touch Trust Matrix:
+
+TIER 1: Silent Auto-Install (Zero UI)
+- Condition: Top Scored Version with Sentiment > 90%, Minor patch, No CVEs/Crashes reported.
+- Action: Queued for silent execution via the designated package manager.
+
+TIER 2: The Toast Notification
+- Condition: Top Scored Version with Sentiment 70-89% OR Major Version Bump.
+- Action: Fires native Windows Toast Notification with [Install Now] / [Skip] actions.
+
+TIER 3: The Quarantine
+- Condition: Top Scored Version Sentiment < 70% OR flagged for critical bugs (memory leaks, BSOD).
+- Action: Suspended. Client re-evaluates after N days based on Cloud Brain instruction.
+
+Security Override: If the update is flagged as a Critical Security Patch (CVE fix), 
+it bypasses all sentiment rules and is forced to Tier 1 or Tier 2.
+
+================================================================================
+4. OPERATIONAL STATES & OS HOOKS
+================================================================================
+To prevent workflow disruption, Tier 1 and accepted Tier 2 updates must pass the 
+Execution Safety Check:
+
+1. OS Idle State Check:
+   - Utilizes `GetLastInputInfo` (Win32 API).
+   - Execution is paused until 15 minutes of user inactivity is detected or 
+     `SessionSwitch` (Win+L Screen Lock) is triggered.
+
+2. Process Exit Trap (Wait-for-Exit):
+   - Utilizes WMI (Windows Management Instrumentation) process monitoring.
+   - If the target application (e.g., Discord.exe) is currently running, Winget 
+     execution is suspended.
+   - The daemon listens for the process termination event. The moment the user closes 
+     the app, the silent Winget update fires before the app can be restarted.
+
+================================================================================
+5. STEP-BY-STEP PROGRAMMING & EXECUTION PLAN
+================================================================================
+
+PHASE 1: Cloud Brain API Development (Python/FastAPI)
+1. Initialize FastAPI / WebSockets project with Redis/CDN caching.
+2. Build data ingestion cron jobs:
+   - NewsAPI/RSS scraper for official tech outlets.
+   - PRAW (Reddit API) for community sentiment.
+3. Integrate LLM pipeline (DeepSeek/Claude API):
+   - Define strict system prompt to score cross-repo candidates and output JSON 
+     (App, Selected_Repo, Version, Decision, Sentiment, Suspend_Days).
+4. Expose WebSocket / SSE gateway for real-time status pushes and a telemetry endpoint for installation feedback.
+
+PHASE 2: Local Daemon Core (Rust)
+1. Initialize Cargo project. Include crates: `reqwest`, `tungstenite` (WebSockets), `serde` (JSON), 
+   `winrt-notification` (Toasts), `tokio` (async).
+2. Implement network listener to establish WebSocket connections.
+3. Build Modular Package Manager Interface:
+   - Winget Plugin: Parse `winget upgrade`.
+   - Scoop Plugin: Parse `scoop status`.
+   - Chocolatey Plugin: Parse `choco outdated`.
+4. Integrate WebSocket listener to receive Cloud Brain decisions and emit telemetry events.
+
+PHASE 3: Windows OS Integration (Rust)
+1. Implement Idle Hook: Use `winapi` crate to call `GetLastInputInfo`.
+2. Implement Process Monitor: Use WMI crate to query `SELECT * FROM Win32_Process`.
+3. Build the Wait-for-Exit queue logic.
+4. Implement Native Toast callback handlers.
+
+PHASE 4: Deployment & Service Registration
+1. Compile Rust binary for release (`cargo build --release`).
+2. Write a comprehensive PowerShell installer script (GhostInstaller) to handle deployment and environment setup.
+
+================================================================================
+6. PRODUCTION INSTALLATION (SINGLE COMMAND)
+================================================================================
+To make the project production-grade and installable via a single command, host the 
+installer script and execute via PowerShell:
+
+Command:
+iwr -useb https://yourdomain.com/install-ghost.ps1 | iex
+
+Installer Script (install-ghost.ps1) Logic:
+1. Check for Admin privileges (prompt UAC if missing).
+2. Dependency Check: Validate existence of Winget, Scoop, and Chocolatey.
+   - If Scoop/Choco are missing, silently execute their respective one-line install scripts.
+   - Automatically configure necessary system/user PATH variables for Scoop and Chocolatey.
+3. Download the pre-compiled `ghost-update.exe` to `C:\Program Files\GhostUpdate\`.
+4. Use `New-Service` to register the executable as a Windows Service running 
+   under `LocalSystem` (ensuring background updates execute successfully).
+5. Start the service.
+6. Exit silently.

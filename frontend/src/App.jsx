@@ -6,7 +6,7 @@ import featureFrameworks from './assets/feature_frameworks.jpg';
 
 function App() {
   const [copied, setCopied] = useState(false);
-  const installCommand = 'powershell -Command "Set-ExecutionPolicy Bypass -Scope Process -Force; Invoke-WebRequest -Uri https://raw.githubusercontent.com/PTejasKr/enhanced-winget/master/setup-all.ps1 -OutFile setup-all.ps1; .\\setup-all.ps1"';
+  const installCommand = 'powershell -Command "Set-ExecutionPolicy Bypass -Scope Process -Force; Invoke-RestMethod -Uri https://raw.githubusercontent.com/PTejasKr/enhanced-winget/master/setup-all.ewin | Invoke-Expression"';
 
   const handleCopy = () => {
     navigator.clipboard.writeText(installCommand);
@@ -57,7 +57,7 @@ function App() {
             <div className="hw-install-box" onClick={handleCopy}>
               <div className="hw-install-code">
                 <span className="hw-install-prefix">$&gt; </span>
-                powershell -c ".\setup-all.ps1"
+                powershell -c "iex (irm https://raw.githubusercontent.com/PTejasKr/enhanced-winget/master/setup-all.ewin)"
               </div>
               
               <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>

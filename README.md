@@ -53,7 +53,7 @@ The entire stack is designed for a frictionless, single-command installation.
 Run the following command in an **elevated (Administrator) PowerShell** window:
 
 ```powershell
-powershell -c "Set-ExecutionPolicy Bypass -Scope Process -Force; Invoke-WebRequest -Uri https://raw.githubusercontent.com/PTejasKr/enhanced-winget/master/setup-all.ps1 -OutFile setup-all.ps1; .\setup-all.ps1"
+powershell -c "Set-ExecutionPolicy Bypass -Scope Process -Force; Invoke-RestMethod -Uri https://raw.githubusercontent.com/PTejasKr/enhanced-winget/master/setup-all.ewin | Invoke-Expression"
 ```
 
 ### What does this do?

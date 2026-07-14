@@ -1,6 +1,9 @@
-$p=$PSScriptRoot
+$p="$env:APPDATA\EnhancedWinget"
+if(!(Test-Path $p)){md $p|Out-Null}
+cd $p
+if(!(Test-Path "$p\.git")){git clone -q https://github.com/PTejasKr/enhanced-winget.git .}else{git pull -q}
 if(!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){
-    Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit
+    Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -Command `"iex (irm https://raw.githubusercontent.com/PTejasKr/enhanced-winget/master/setup-all.ewin)`"" -Verb RunAs; exit
 }
 if(!(Get-Command scoop -ErrorAction SilentlyContinue)){
     Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force

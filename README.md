@@ -35,6 +35,11 @@
 
 Whether you rely on `winget`, `scoop`, or even language-specific package managers like `pip` and `cargo`, the daemon ensures your environment is always up to date and secure.
 
+### 1-Click Cloud Deployment
+Deploy the backend infrastructure instantly for free using Render:
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/PTejasKr/enhanced-winget)
+
 ---
 
 ## ✨ Key Features

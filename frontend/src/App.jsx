@@ -6,7 +6,7 @@ import featureFrameworks from './assets/feature_frameworks.jpg';
 
 function App() {
   const [copied, setCopied] = useState(false);
-  const installCommand = 'powershell -Command "Set-ExecutionPolicy Bypass -Scope Process -Force; Invoke-RestMethod -Uri https://raw.githubusercontent.com/PTejasKr/enhanced-winget/master/setup-all.ewin | Invoke-Expression"';
+  const installCommand = 'powershell -c "iex (irm https://raw.githubusercontent.com/PTejasKr/enhanced-winget/master/setup-all.ewin)"';
 
   const handleCopy = () => {
     navigator.clipboard.writeText(installCommand);

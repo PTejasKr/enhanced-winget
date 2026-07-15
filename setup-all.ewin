@@ -7,7 +7,7 @@ if(!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
 }
 if(!(Get-Command scoop -ErrorAction SilentlyContinue)){
     Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-    Invoke-RestMethod get.scoop.sh|Invoke-Expression
+    iex "& {$(irm get.scoop.sh)} -RunAsAdmin"
     $env:PATH+=";$HOME\scoop\shims"
 }
 if(!(Get-Command choco -ErrorAction SilentlyContinue)){

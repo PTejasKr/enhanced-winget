@@ -5,7 +5,7 @@ if (Get-Command scoop -ErrorAction SilentlyContinue) {
 } else {
     Write-Host "Installing Scoop..." -ForegroundColor Yellow
     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-    Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+    iex "& {$(irm get.scoop.sh)} -RunAsAdmin"
 }
 
 Write-Host "Checking for Chocolatey..." -ForegroundColor Cyan

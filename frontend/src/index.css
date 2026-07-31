@@ -1,15 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 :root {
-  --bg-color: #4A1525; /* Deep Berry */
-  --text-primary: #F5E6D3; /* Warm Cream for contrast */
+  --bg-color: #4A1525;
+  --text-primary: #F5E6D3;
   --color-caramel: #D58940;
   --color-terracotta: #B24C38;
   
   --font-display: 'Playfair Display', serif; 
   --font-mono: 'Space Mono', monospace;
   
-  /* FIXED SCALING MATH: The previous scaling value was pushing content off-screen */
   --u: max(calc(100vw / 2360), 0.58px);
   
   --vsq: calc(0.5vw + 0.5vh);
@@ -38,7 +37,6 @@ body {
   max-width: 100%;
 }
 
-/* Nav */
 nav {
   position: absolute;
   top: var(--hw-frame);
@@ -71,7 +69,6 @@ nav a:hover {
   gap: calc(30 * var(--u));
 }
 
-/* Main Header */
 .hw-vignette {
   position: relative;
   display: flex;
@@ -121,7 +118,6 @@ nav a:hover {
   letter-spacing: 0.03em;
 }
 
-/* Install Section */
 .hw-install-section {
   margin-top: calc(20 * var(--u));
   display: flex;
@@ -158,10 +154,9 @@ nav a:hover {
   font-weight: 700;
 }
 
-/* Features Section */
 .hw-features {
   position: relative;
-  background-color: #2D0B10; /* Slightly darker shade of deep berry for the paper background */
+  background-color: #2D0B10;
   color: var(--text-primary);
   padding-top: calc(30 * var(--u));
   padding-bottom: calc(100 * var(--u));

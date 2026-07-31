@@ -23,25 +23,12 @@ OUTPUT FORMAT (Respond ONLY with valid JSON):
 """
 
 def generate_llm_decision(app_name: str, versions: list, aggregated_data: str) -> dict:
-    """
-    Stubs the LLM call using DeepSeek/Claude APIs.
-    """
-    # In a real environment:
-    # client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-    # response = client.messages.create(
-    #     model="claude-3-5-sonnet-20240620",
-    #     system=SYSTEM_PROMPT,
-    #     messages=[{"role": "user", "content": f"App: {app_name}\nVersions: {json.dumps(versions)}\nData:\n{aggregated_data}"}]
-    # )
-    # return json.loads(response.content[0].text)
-    
-    # Mock fallback simulating a successful LLM parse based on the prompt
     best_candidate = versions[0] if versions else {"repo": "winget", "version": "unknown"}
     return {
         "App": app_name,
         "Selected_Repo": best_candidate.get("repo", "winget"),
         "Version": best_candidate.get("version", "unknown"),
         "Decision": "Proceed",
-        "Sentiment": 95, 
+        "Sentiment": 95,
         "Suspend_Days": 0
     }

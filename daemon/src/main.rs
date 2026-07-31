@@ -66,7 +66,6 @@ async fn main() {
                     let sentiment = decision_val["Sentiment"].as_i64().unwrap_or(0);
                     
                     if sentiment >= 70 && sentiment < 90 {
-                        // Tier 2: Toast Notification
                         Toast::new(Toast::POWERSHELL_APP_ID)
                             .title(&format!("Update Available: {}", app))
                             .text1(&format!("AI Sentiment: {}%. Should we install?", sentiment))
@@ -75,7 +74,6 @@ async fn main() {
                             .show()
                             .expect("Failed to show toast notification");
                     } else if sentiment >= 90 {
-                        // Tier 1: Silent auto-install
                         if os_integration::is_system_idle_for_mins(15) {
                             println!("System is idle. Executing silent install for {}...", app);
                         } else {
